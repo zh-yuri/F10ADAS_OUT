@@ -11,15 +11,17 @@ import com.neusoft.oddc.oddc.model.DataPackageType;
 import com.neusoft.oddc.oddc.neusoft.JobManager;
 import com.neusoft.oddc.oddc.neusoft.LogData;
 import com.neusoft.oddc.oddc.neusoft.NeuSoftInterface;
+import com.neusoft.oddc.oddc.neusoft.OBDManager;
 import com.neusoft.oddc.oddc.neusoft.ODDCclass;
 import com.neusoft.oddc.oddc.neusoft.PlaybackList;
-import com.neusoft.oddc.oddc.utilities.Utilities;import com.neusoft.oddc.widget.eventbus.EventStartDataCollection;
+import com.neusoft.oddc.oddc.utilities.Utilities;
+import com.neusoft.oddc.widget.eventbus.EventStartDataCollection;
 import com.neusoft.oddc.widget.eventbus.EventStopDataCollection;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
-import java.text.SimpleDateFormat;import java.util.ArrayList;
+import java.util.ArrayList;
 
 public class NeusoftHandler implements NeuSoftInterface {
 
@@ -29,8 +31,9 @@ public class NeusoftHandler implements NeuSoftInterface {
     private static ODDCclass oddCclass;
     private static JobManager jobManager;
     public static boolean isOddcOk = false;
+    private OBDManager obd;
 
-    private ADASHelper adasHelper;
+    //private ADASHelper adasHelper;
 
     // for data transfer between Neusoft and ODDC
     public void onFLAparam(int param) {
@@ -38,9 +41,11 @@ public class NeusoftHandler implements NeuSoftInterface {
 
     public NeusoftHandler(Context context) {
         mContext = context;
+        obd = OBDManager.getInstance();
     }
 
     public NeusoftHandler() {
+        obd = OBDManager.getInstance();
     }
 
     public static Context getContext() {
@@ -56,16 +61,14 @@ public class NeusoftHandler implements NeuSoftInterface {
     }
 
     @Override
-    public String getVIN() {
-        return ADASHelper.getvin(); // VIN
-    }
+    public String getVIN() {return obd.getVIN();}
 
     @Override
     public Location getLatLong() {
-        if (null == adasHelper) {
+        if (null == obd) {
             return null;
         }
-        return adasHelper.getCoarseLocation();
+        return obd.getLocation();
     }
 
     public void stop() {
@@ -78,16 +81,15 @@ public class NeusoftHandler implements NeuSoftInterface {
         File videodir = new File(Constants.FILE_PATH);
         oddCclass = new ODDCclass(url, context, videodir);
         oddCclass.setListener(this);
-        adasHelper = new ADASHelper(context);
+        obd = OBDManager.getInstance();
 
         //Initialize Job Manager
         jobManager = new JobManager(com.neusoft.oddc.oddc.neusoft.Constants.ODDCApp.BASE_URL);
         jobManager.setODDC(oddCclass);
         jobManager.setNSH(this);
         oddCclass.setJobManager(jobManager);
-Log.w("ODDC","NeusoftHandler.init CALLing jobManager.requestInitialSessionId");
+
         jobManager.requestInitialSessionId();
-        Log.w("ODDC","NeusoftHandler.init RETURN from jobManager.requestInitialSessionId");
     }
 
     public boolean startupOddcClass() {
@@ -187,9 +189,9 @@ Log.w("ODDC","NeusoftHandler.init CALLing jobManager.requestInitialSessionId");
         }
 
         cd.timestamp = dateTime;
-		String vin = Utilities.getVehicleID();
+		String vin = OBDManager.getInstance().getVIN();
 
-		//VIN cannot be empty.
+        //VIN cannot be empty.
         if(!vin.isEmpty())
         {
             cd.vehicleID = vin;
@@ -200,7 +202,7 @@ Log.w("ODDC","NeusoftHandler.init CALLing jobManager.requestInitialSessionId");
             return null;
         }
 
-        Location location = ADASHelper.getCoarseLocation();
+        Location location = OBDManager.getInstance().getLocation();
         if (null != location) {
             double mLongitude = location.getLongitude();
             double mLatitude = location.getLatitude();
@@ -208,7 +210,7 @@ Log.w("ODDC","NeusoftHandler.init CALLing jobManager.requestInitialSessionId");
             cd.latitude = mLatitude;
         }
 
-        cd.speed = ADASHelper.getspd();
+        cd.speed = OBDManager.getInstance().getSPD();
         cd.speedDetectionType = 0; // always be ZERO
 
         cd.accelerationX = accelerationX;
