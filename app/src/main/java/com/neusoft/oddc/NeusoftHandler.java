@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class NeusoftHandler implements NeuSoftInterface {
 
-    private static final String TAG = ADASHelper.class.getSimpleName();
+    private static final String TAG = "NEUSOFTHANDLER";
 
     private static Context mContext;
     private static ODDCclass oddCclass;
@@ -40,6 +40,7 @@ public class NeusoftHandler implements NeuSoftInterface {
     } // example only at this time, param(s) TBD
 
     public NeusoftHandler(Context context) {
+        Log.w("SEQUENCE","NeusoftHandler.NeusoftHandler");
         mContext = context;
         obd = OBDManager.getInstance();
     }
@@ -77,6 +78,7 @@ public class NeusoftHandler implements NeuSoftInterface {
 
 
     public void init(Context context) {
+        Log.w("SEQUENCE","NeusoftHandler.init");
         String url = com.neusoft.oddc.oddc.neusoft.Constants.ODDCApp.BASE_URL;
         File videodir = new File(Constants.FILE_PATH);
         oddCclass = new ODDCclass(url, context, videodir);
@@ -89,7 +91,7 @@ public class NeusoftHandler implements NeuSoftInterface {
         jobManager.setNSH(this);
         oddCclass.setJobManager(jobManager);
 
-        jobManager.requestInitialSessionId();
+        //jobManager.requestInitialSessionId();
     }
 
     public boolean startupOddcClass() {

@@ -56,15 +56,18 @@ public class JobManager
 
     public JobManager(String url)
     {
+        Log.w("SEQUENNCE","JobManager.JobManager "+url);
         instance = this;
         baseUrl = url;
         restController = new RESTController(url);
+        Log.w("ODDC","JobManager.JobManager baseUrl="+baseUrl);
     }
 
     public void reset(String url){
         restController = null;
         baseUrl = url;
         restController = new RESTController(url);
+        Log.w("ODDC","JobManager.reset baseUrl="+baseUrl);
     }
 
     public boolean isAdasEnabled()
@@ -293,19 +296,22 @@ public class JobManager
 
     public void requestInitialSessionId()
     {
+        final String vin = OBDManager.getInstance().getVIN();
+        Log.w("SEQUENCE","JobManager.requestInitialSessionId vin="+vin);
         singlePingTimer = new Timer();
         singlePingTimer.schedule(new TimerTask() {
             @Override
             public void run()
             {
                 //The following retrieves data from VehicleProfileEntityDao and the VIN from OBD-2.
-                String vin = Utilities.getVehicleID();
+
 
                 String csStr = ODDCclass.curSession == null ? "null" : ODDCclass.curSession.toString();
                 Log.w("ODDC","JobManager.requestInitialSessionId.run BoM curSession=" + csStr + " vin="+vin);
 
-                if(!vin.isEmpty())
+                if (!vin.equals("NA"))
                 {
+                    Log.w("ODDC","JobManager.requestInitialSessionId.vinNOTempty vin="+vin);
                     envelope = new Envelope(ODDCclass.curSession, vin);
 
                     ODDCTask task = ODDCTask.createJobRequestTask(envelope);
@@ -326,7 +332,7 @@ public class JobManager
                         singlePingTimer.cancel();
                         singlePingTimer.purge();
                     }
-                    Log.w("ODDC","JobManager.requestInitialSessionId.run CALLing startPingTimer");
+                    Log.w("ODDC","JobManager.requestInitialSessionId.run CALLing startPingTimer vin="+vin);
                     startPingTimer();
                 }
 
@@ -363,7 +369,7 @@ public class JobManager
 
     public void startPingTimer()
     {
-        Log.w("ODDC","JobManager.startPingTimer BoM");
+        Log.w("ODDC","JobManager.startPingTimer BoMMMMMMMMMMMMMMMMMMM");
 
         pingTimer = new Timer();
         pingTimer.schedule(new TimerTask() {
@@ -377,7 +383,7 @@ public class JobManager
 
                 Log.w("ODDC"," _ ");
                 Log.w("ODDC"," _ ");
-                Log.w("ODDC","JobManager.PingTimer.run BoM");
+                Log.w("ODDC","JobManager.PingTimer.run BoM envelope.VIN="+envelope.getVehicleID());
                 ArrayList<ODDCTask> tasks = postCommandCheck(envelope); // checking Server for new tasks
 
                 Log.w("ODDC","JobManager.PingTimer postCommandCheck tasks="+tasks);

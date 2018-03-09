@@ -926,17 +926,17 @@ public class PreviewActivity extends BaseActivity implements Camera.PreviewCallb
                     }
 
 
-                    float[] mMagnetic = obd.getMagnetic();
+                    /*float[] mMagnetic = obd.getMagnetic();
                     float[] mGravity = obd.getGravity();
                     if (null != mMagnetic && null != mGravity) {
                         realTimeDataFragment.updateGSensor(String.format("%.1f", mGravity[0]), String.format("%.1f", mGravity[1]), String.format("%.1f", mGravity[2]));
-//                        realTimeDataFragment.updateMagnetic(String.format("%.0f", mMagnetic[0]), String.format("%.0f", mMagnetic[1]), String.format("%.0f", mMagnetic[2]));
-                    }
+                        realTimeDataFragment.updateMagnetic(String.format("%.0f", mMagnetic[0]), String.format("%.0f", mMagnetic[1]), String.format("%.0f", mMagnetic[2]));
+                    }*/
 
                     float x = obd.getAccelerometerX();
                     float y = obd.getAccelerometerY();
                     float z = obd.getAccelerometerZ();
-//                    realTimeDataFragment.updateGSensor(String.valueOf(x),String.valueOf(y),String.valueOf(z));
+                    realTimeDataFragment.updateGSensor(String.valueOf(x),String.valueOf(y),String.valueOf(z));
 
                     int spd = obd.getSPD();
                     realTimeDataFragment.updateSpeed(String.format("%d", spd));

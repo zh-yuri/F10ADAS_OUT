@@ -116,7 +116,7 @@ public class OBDManager {
     public OBDManager(Context ctx){
         instance = this;
         mContext = ctx;
-
+Log.w("SEQUUENCE","OBDManager.OBDManager");
         smgr = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
 
         setupBluetooth();
@@ -127,6 +127,7 @@ public class OBDManager {
     }
 
     private boolean setupBluetooth(){
+        Log.w("SEQUENCE","OBDManager.setupBluetooth");
         dbuf = new byte[64];
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -154,7 +155,6 @@ public class OBDManager {
         if (obdDevice != null) {
             obdThread = new ConnectThread(obdDevice);
             if (mbtOK){
-                Log.w(TAG, "CALLing ConnectThread.run");
                 errMsg = "BT OK, CALLing obdThread.start";
                 newMsg = true;
                 obdThread.start();
@@ -288,7 +288,7 @@ public class OBDManager {
             BluetoothSocket sock = null;
             BluetoothSocket sockFallback = null;
 
-            Log.w(TAG, "OBDManager.ConnectThread establishing Bluetooth connection..");
+            Log.w("SEQUENCE", "OBDManager.ConnectThread establishing Bluetooth connection..");
             try {
                 sock = dev.createRfcommSocketToServiceRecord(obdUUID);
                 sock.connect();
@@ -322,26 +322,25 @@ public class OBDManager {
         }
 
         public void run() {
-            errMsg = "ConnectThread.run";
-            Log.w(TAG,errMsg);
+            errMsg = "OBDManager.ConnectThread.run";
+            Log.w("SEQUENCE",errMsg);
             newMsg = true;
             setupStreams();
             writeELM(ate0);
             writeELM(ats0);
 
-            Log.w(TAG,"ConnectThread.run BoF");
             while (streaming){
-                //Log.w(TAG,"ConnectThread.run needReadVIN="+needReadVIN);
                 if (needReadVIN){
                     writeELM(atl1);
                     vinBuf = readVIN();
                     writeELM(atl0);
                     if (vinBuf != "NA"){
+                        Log.w("SEQUENCE","ConnectThread.run vin FOUND="+vinBuf);
                         needReadVIN = false;
                         MainActivity.getInstance().setVIN();
                     }
                     //needReadVIN = false;
-                    Log.w(TAG,"ConnectThread.run.while needReadVIN="+vinBuf);
+                    //Log.w(TAG,"ConnectThread.run.while needReadVIN="+vinBuf);
                 }
                 else {
 
@@ -385,7 +384,7 @@ public class OBDManager {
             byte vbuf[] = new byte[64];
             byte cbuf[] = new byte[4];
             byte nbyte;
-            final char[] cs = new char[18];
+            final char[] cs = new char[17];
             int i = 0;
             int startFound = 0;
             int aBytes = 0;
@@ -447,9 +446,6 @@ public class OBDManager {
                     return new String("NA");
                 }
             }
-            errMsg = "readVIN VIN="+cs[0]+cs[1]+cs[2]+cs[3]+cs[4]+cs[5]+cs[6];
-            Log.w(TAG,errMsg);
-            newMsg = true;
             return new String(cs);
         }
 
