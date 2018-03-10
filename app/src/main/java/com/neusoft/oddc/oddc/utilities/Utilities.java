@@ -139,7 +139,7 @@ public class Utilities
             switch (vinOption)
             {
                 case 0:     //Both with OBD2 taking priority
-                    if(!obd2Vin.isEmpty())
+                    if(!obd2Vin.equals("NA"))
                     {
                         vin = obd2Vin;
                     }

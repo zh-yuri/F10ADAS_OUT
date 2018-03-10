@@ -43,6 +43,7 @@ import com.neusoft.oddc.entity.Constants;
 import com.neusoft.oddc.entity.EntityMainButton;
 import com.neusoft.oddc.fragment.ErrorDialogFragment;
 import com.neusoft.oddc.oddc.neusoft.JobManager;
+import com.neusoft.oddc.oddc.utilities.Utilities;
 import com.neusoft.oddc.widget.FileUtil;
 import com.neusoft.oddc.widget.PropertyUtil;
 import com.neusoft.oddc.widget.StorageUtil;
@@ -204,7 +205,8 @@ public class MainActivity extends BaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                main_status_param2.setText(obd.getVIN());
+                //main_status_param2.setText(obd.getVIN());
+                main_status_param2.setText(Utilities.getVehicleID());
             }
         });
         JobManager jm = JobManager.getInstance();

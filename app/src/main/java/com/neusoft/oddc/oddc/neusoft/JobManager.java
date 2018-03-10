@@ -296,15 +296,13 @@ public class JobManager
 
     public void requestInitialSessionId()
     {
-        final String vin = OBDManager.getInstance().getVIN();
-        Log.w("SEQUENCE","JobManager.requestInitialSessionId vin="+vin);
         singlePingTimer = new Timer();
         singlePingTimer.schedule(new TimerTask() {
             @Override
             public void run()
             {
                 //The following retrieves data from VehicleProfileEntityDao and the VIN from OBD-2.
-
+                final String vin = Utilities.getVehicleID();
 
                 String csStr = ODDCclass.curSession == null ? "null" : ODDCclass.curSession.toString();
                 Log.w("ODDC","JobManager.requestInitialSessionId.run BoM curSession=" + csStr + " vin="+vin);

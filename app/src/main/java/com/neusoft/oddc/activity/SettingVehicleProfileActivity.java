@@ -8,12 +8,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.bumptech.glide.util.Util;
 import com.neusoft.oddc.MyApplication;
 import com.neusoft.oddc.R;
 import com.neusoft.oddc.adas.ADASHelper;
 import com.neusoft.oddc.db.dbentity.VehicleProfileEntity;
 import com.neusoft.oddc.db.gen.VehicleProfileEntityDao;
 import com.neusoft.oddc.oddc.neusoft.OBDManager;
+import com.neusoft.oddc.oddc.utilities.Utilities;
 
 import java.util.ArrayList;
 
@@ -66,7 +68,7 @@ public class SettingVehicleProfileActivity extends BaseEdittableActivity {
             entity = null;
 
             // Set vin read from odb2
-            String vin = OBDManager.getInstance().getVIN();
+            String vin = Utilities.getVehicleID();
             Log.d(TAG, "VIN = " + vin);
             if (!TextUtils.isEmpty(vin)) {
                 vp_vin_edittext.setText(vin);
@@ -89,7 +91,8 @@ public class SettingVehicleProfileActivity extends BaseEdittableActivity {
         vp_model_edittext.setText(entity.getModel());
         vp_color_edittext.setText(entity.getColor());
         vp_mileage_edittext.setText(entity.getMileage());
-        String vin = OBDManager.getInstance().getVIN();
+        //String vin = OBDManager.getInstance().getVIN();
+        String vin = Utilities.getVehicleID();
         Log.d(TAG, "VIN = " + vin);
         if (TextUtils.isEmpty(vin)) {
             vp_vin_edittext.setText(entity.getVin());
@@ -134,10 +137,10 @@ public class SettingVehicleProfileActivity extends BaseEdittableActivity {
         entity.setColor(color);
         entity.setMileage(mileage);
 
-        String vin = OBDManager.getInstance().getVIN();
-        if (TextUtils.isEmpty(vin)) {
-            vin = vp_vin_edittext.getText().toString();
-        }
+        //String vin = OBDManager.getInstance().getVIN();
+        String vin = Utilities.getVehicleID();
+        vin = vp_vin_edittext.getText().toString();
+        //if (vin.equals("NA")) {vin = vp_vin_edittext.getText().toString();}
         entity.setVin(vin);
 
         if (isInsert) {
