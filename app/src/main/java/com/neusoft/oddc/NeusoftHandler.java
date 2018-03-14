@@ -191,7 +191,7 @@ public class NeusoftHandler implements NeuSoftInterface {
         }
 
         cd.timestamp = dateTime;
-		String vin = OBDManager.getInstance().getVIN();
+		String vin = Utilities.getVehicleID();
 
         //VIN cannot be empty.
         if(!vin.isEmpty())
