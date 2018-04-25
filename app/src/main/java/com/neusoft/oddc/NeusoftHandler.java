@@ -62,7 +62,11 @@ public class NeusoftHandler implements NeuSoftInterface {
     }
 
     @Override
-    public String getVIN() {return obd.getVIN();}
+    public String getVIN()
+    {
+        return Utilities.getVehicleID();
+        //return obd.getVIN();
+    }
 
     @Override
     public Location getLatLong() {

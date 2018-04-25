@@ -200,7 +200,8 @@ public class MainActivity extends BaseActivity {
     public static MainActivity getInstance() {return instance;}
 
     public void setVIN(){
-        obdVIN = obd.getVIN();
+        //obdVIN = obd.getVIN();
+        obdVIN = Utilities.getVehicleID();
         Log.w(TAG,"MainActivity.setVIN "+obdVIN);
         runOnUiThread(new Runnable() {
             @Override
@@ -243,7 +244,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onPermissionGranted() {
-        Log.w("SEQUENCE","MainActivity.onPermissionGranted vin="+obd.getVIN());
+        Log.w("SEQUENCE","MainActivity.onPermissionGranted vin="+Utilities.getVehicleID());
         super.onPermissionGranted();
 
         // init config property
